@@ -71,8 +71,8 @@ const formats = [
 const directions = ['Omote', 'Ura'];
 const attacks = [
   'Shomenuchi',
-  'Katate dori',
-  'Ryote dori',
+  'Katatedori',
+  'Ryotedori',
   'Yokomenuchi',
   'Tsuki',
   'Other',
