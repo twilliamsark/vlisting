@@ -70,7 +70,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Aikido Video Listings
         </Typography>
