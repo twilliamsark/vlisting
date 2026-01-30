@@ -10,6 +10,13 @@ import type { VideoListing } from './types';
 
 const theme = createTheme();
 
+interface CsvRow {
+  name: string;
+  url: string;
+  technique: string;
+  format: string;
+}
+
 function App() {
   const [editingListing, setEditingListing] = useState<VideoListing | null>(
     null,
@@ -21,8 +28,8 @@ function App() {
     if (file) {
       Papa.parse(file, {
         header: true,
-        complete: (results) => {
-          results.data.forEach((row: any) => {
+        complete: (results: Papa.ParseResult<CsvRow>) => {
+          results.data.forEach((row: CsvRow) => {
             const name = row.name;
             const url = row.url;
             const technique = row.technique;
