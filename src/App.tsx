@@ -17,6 +17,7 @@ interface CsvRow {
   format: string;
   direction?: string;
   attack?: string;
+  stance?: string;
 }
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
             const format = row.format;
             const direction = row.direction;
             const attack = row.attack;
+            const stance = row.stance;
             if (name && url && technique && format) {
               const videoId = extractVideoId(url);
               if (videoId) {
@@ -50,6 +52,7 @@ function App() {
                   videoId,
                   ...(direction && { direction }),
                   ...(attack && { attack }),
+                  ...(stance && { stance }),
                 };
                 if (existing) {
                   updateListing(existing.id, listingData);

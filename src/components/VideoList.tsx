@@ -61,12 +61,13 @@ const attacks = [
   'Tsuki',
   'Other',
 ];
+const stances = ['Aihanmi', 'Gyakuhanmi', 'Other'];
 
 export default function VideoList({ onEdit }: VideoListProps) {
   const { listings, deleteListing } = useVideoStore();
 
   const [sortBy, setSortBy] = useState<
-    'name' | 'technique' | 'format' | 'direction' | 'attack'
+    'name' | 'technique' | 'format' | 'direction' | 'attack' | 'stance'
   >('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
@@ -74,6 +75,7 @@ export default function VideoList({ onEdit }: VideoListProps) {
   const [filterFormat, setFilterFormat] = useState<string>('');
   const [filterDirection, setFilterDirection] = useState<string>('');
   const [filterAttack, setFilterAttack] = useState<string>('');
+  const [filterStance, setFilterStance] = useState<string>('');
 
   const filteredListings = useMemo(() => {
     return listings.filter(
@@ -81,9 +83,17 @@ export default function VideoList({ onEdit }: VideoListProps) {
         (!filterTechnique || listing.technique === filterTechnique) &&
         (!filterFormat || listing.format === filterFormat) &&
         (!filterDirection || listing.direction === filterDirection) &&
-        (!filterAttack || listing.attack === filterAttack),
+        (!filterAttack || listing.attack === filterAttack) &&
+        (!filterStance || listing.stance === filterStance),
     );
-  }, [listings, filterTechnique, filterFormat, filterDirection, filterAttack]);
+  }, [
+    listings,
+    filterTechnique,
+    filterFormat,
+    filterDirection,
+    filterAttack,
+    filterStance,
+  ]);
 
   const sortedListings = useMemo(() => {
     return [...filteredListings].sort((a, b) => {
@@ -177,6 +187,23 @@ export default function VideoList({ onEdit }: VideoListProps) {
             ))}
           </Select>
         </FormControl>
+        <FormControl size="small" sx={{ minWidth: 120 }}>
+          <InputLabel>Stance</InputLabel>
+          <Select
+            value={filterStance}
+            label="Stance"
+            onChange={(e) => setFilterStance(e.target.value)}
+          >
+            <MenuItem value="">
+              <em>All</em>
+            </MenuItem>
+            {stances.map((st) => (
+              <MenuItem key={st} value={st}>
+                {st}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table>
@@ -229,6 +256,15 @@ export default function VideoList({ onEdit }: VideoListProps) {
                   Attack
                 </TableSortLabel>
               </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortBy === 'stance'}
+                  direction={sortBy === 'stance' ? sortOrder : 'asc'}
+                  onClick={() => handleSort('stance')}
+                >
+                  Stance
+                </TableSortLabel>
+              </TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -261,6 +297,7 @@ export default function VideoList({ onEdit }: VideoListProps) {
                 <TableCell>{listing.format}</TableCell>
                 <TableCell>{listing.direction || ''}</TableCell>
                 <TableCell>{listing.attack || ''}</TableCell>
+                <TableCell>{listing.stance || ''}</TableCell>
                 <TableCell>
                   <Button
                     variant="outlined"

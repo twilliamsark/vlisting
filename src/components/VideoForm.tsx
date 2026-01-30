@@ -28,6 +28,7 @@ const schema = yup.object({
   format: yup.string().required('Format is required'),
   direction: yup.string().optional().default(''),
   attack: yup.string().optional().default(''),
+  stance: yup.string().optional().default(''),
 });
 
 interface FormData {
@@ -37,6 +38,7 @@ interface FormData {
   format: string;
   direction: string;
   attack: string;
+  stance: string;
 }
 
 const techniques = [
@@ -77,6 +79,7 @@ const attacks = [
   'Tsuki',
   'Other',
 ];
+const stances = ['Aihanmi', 'Gyakuhanmi', 'Other'];
 
 interface VideoFormProps {
   editingListing: VideoListing | null;
@@ -104,6 +107,7 @@ export default function VideoForm({
           format: editingListing.format,
           direction: editingListing.direction || '',
           attack: editingListing.attack || '',
+          stance: editingListing.stance || '',
         }
       : {
           name: '',
@@ -112,6 +116,7 @@ export default function VideoForm({
           format: '',
           direction: '',
           attack: '',
+          stance: '',
         },
   });
 
@@ -124,6 +129,7 @@ export default function VideoForm({
         format: editingListing.format,
         direction: editingListing.direction || '',
         attack: editingListing.attack || '',
+        stance: editingListing.stance || '',
       });
     } else {
       reset({
@@ -133,6 +139,7 @@ export default function VideoForm({
         format: '',
         direction: '',
         attack: '',
+        stance: '',
       });
     }
   }, [editingListing, reset]);
@@ -140,12 +147,13 @@ export default function VideoForm({
   const onSubmit: SubmitHandler<FormData> = (data) => {
     const videoId = extractVideoId(data.url);
     if (videoId) {
-      const { direction, attack, ...rest } = data;
+      const { direction, attack, stance, ...rest } = data;
       const listingData = {
         ...rest,
         videoId,
         ...(direction && direction.trim() && { direction }),
         ...(attack && attack.trim() && { attack }),
+        ...(stance && stance.trim() && { stance }),
       };
       if (editingListing) {
         updateListing(editingListing.id, listingData);
@@ -257,6 +265,26 @@ export default function VideoForm({
               {attacks.map((atk) => (
                 <MenuItem key={atk} value={atk}>
                   {atk}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+      />
+      <Controller
+        name="stance"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Stance (Optional)</InputLabel>
+            <Select {...field} label="Stance (Optional)">
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {stances.map((st) => (
+                <MenuItem key={st} value={st}>
+                  {st}
                 </MenuItem>
               ))}
             </Select>
