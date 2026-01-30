@@ -1,4 +1,5 @@
 import { useForm, Controller } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import { useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -25,6 +26,7 @@ const schema = yup.object({
     ),
   technique: yup.string().required('Technique is required'),
   format: yup.string().required('Format is required'),
+  direction: yup.string().optional().default(''),
 });
 
 interface FormData {
@@ -32,6 +34,7 @@ interface FormData {
   url: string;
   technique: string;
   format: string;
+  direction: string;
 }
 
 const techniques = [
@@ -63,6 +66,7 @@ const formats = [
   'Suwariwaza',
   'Tiado',
 ];
+const directions = ['Omote', 'Ura'];
 
 interface VideoFormProps {
   editingListing: VideoListing | null;
@@ -88,12 +92,14 @@ export default function VideoForm({
           url: editingListing.url,
           technique: editingListing.technique,
           format: editingListing.format,
+          direction: editingListing.direction || '',
         }
       : {
           name: '',
           url: '',
           technique: '',
           format: '',
+          direction: '',
         },
   });
 
@@ -104,6 +110,7 @@ export default function VideoForm({
         url: editingListing.url,
         technique: editingListing.technique,
         format: editingListing.format,
+        direction: editingListing.direction || '',
       });
     } else {
       reset({
@@ -111,18 +118,25 @@ export default function VideoForm({
         url: '',
         technique: '',
         format: '',
+        direction: '',
       });
     }
   }, [editingListing, reset]);
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit: SubmitHandler<FormData> = (data) => {
     const videoId = extractVideoId(data.url);
     if (videoId) {
+      const { direction, ...rest } = data;
+      const listingData = {
+        ...rest,
+        videoId,
+        ...(direction && direction.trim() && { direction }),
+      };
       if (editingListing) {
-        updateListing(editingListing.id, { ...data, videoId });
+        updateListing(editingListing.id, listingData);
         onCancel();
       } else {
-        addListing({ ...data, videoId });
+        addListing(listingData);
         reset();
       }
     }
@@ -188,6 +202,26 @@ export default function VideoForm({
               {formats.map((fmt) => (
                 <MenuItem key={fmt} value={fmt}>
                   {fmt}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+      />
+      <Controller
+        name="direction"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Direction (Optional)</InputLabel>
+            <Select {...field} label="Direction (Optional)">
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {directions.map((dir) => (
+                <MenuItem key={dir} value={dir}>
+                  {dir}
                 </MenuItem>
               ))}
             </Select>

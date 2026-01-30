@@ -29,6 +29,7 @@ export default function VideoList({ onEdit }: VideoListProps) {
             <TableCell>URL</TableCell>
             <TableCell>Technique</TableCell>
             <TableCell>Format</TableCell>
+            <TableCell>Direction</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -55,6 +56,7 @@ export default function VideoList({ onEdit }: VideoListProps) {
               </TableCell>
               <TableCell>{listing.technique}</TableCell>
               <TableCell>{listing.format}</TableCell>
+              <TableCell>{listing.direction || ''}</TableCell>
               <TableCell>
                 <Button
                   variant="outlined"
