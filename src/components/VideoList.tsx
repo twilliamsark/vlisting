@@ -30,6 +30,7 @@ export default function VideoList({ onEdit }: VideoListProps) {
             <TableCell>Technique</TableCell>
             <TableCell>Format</TableCell>
             <TableCell>Direction</TableCell>
+            <TableCell>Attack</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -57,6 +58,7 @@ export default function VideoList({ onEdit }: VideoListProps) {
               <TableCell>{listing.technique}</TableCell>
               <TableCell>{listing.format}</TableCell>
               <TableCell>{listing.direction || ''}</TableCell>
+              <TableCell>{listing.attack || ''}</TableCell>
               <TableCell>
                 <Button
                   variant="outlined"
